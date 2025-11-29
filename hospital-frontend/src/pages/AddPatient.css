@@ -1,0 +1,31 @@
+.form-container {
+  padding: 20px;
+}
+
+.form-title {
+  color: #1976d2;
+  font-size: 26px;
+}
+
+form input,
+form select {
+  width: 60%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.submit-button {
+  background-color: #1976d2;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.submit-button:hover {
+  background-color: #145a9e;
+}

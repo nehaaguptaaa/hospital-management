@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+/* Make the root take full height */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Global box sizing */
+* {
+  box-sizing: border-box;
+}
+
+/* App layout – this will control footer position */
+.app-layout {
+  min-height: 100vh;          /* full viewport height */
+  display: flex;
+  flex-direction: column;     /* stack: navbar, content, footer */
+}
+
+/* Main content area – expands to push footer down */
+.main-content {
+  flex: 1;
+}
+

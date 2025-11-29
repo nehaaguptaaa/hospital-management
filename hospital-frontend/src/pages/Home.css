@@ -1,0 +1,26 @@
+.home-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.home-content {
+  max-width: 600px;
+}
+
+.home-content h1 {
+  font-size: 2.4rem;
+  color: #1976d2;
+}
+
+.home-content p {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.home-image {
+  width: 180px;
+  margin-top: 20px;
+}
