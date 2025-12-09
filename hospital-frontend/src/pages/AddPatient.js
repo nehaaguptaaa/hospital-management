@@ -1,10 +1,11 @@
 import { useState } from "react";
-import API from "../services/Api";
 import { useNavigate } from "react-router-dom";
+import API from "../services/Api";
 import "./AddPatient.css";
 
-
 function AddPatient() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     age: "",
@@ -13,8 +14,6 @@ function AddPatient() {
     address: "",
     disease: ""
   });
-
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,19 +28,19 @@ function AddPatient() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Add Patient</h2>
+    <div className="form-container">
+      <h2 className="form-title">Add Patient</h2>
 
       <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Name" onChange={handleChange} /> <br />
-        <input name="age" placeholder="Age" onChange={handleChange} /> <br />
-        <input name="gender" placeholder="Gender" onChange={handleChange} /> <br />
-        <input name="phone" placeholder="Phone" onChange={handleChange} /> <br />
-        <input name="address" placeholder="Address" onChange={handleChange} /> <br />
-        <input name="disease" placeholder="Disease" onChange={handleChange} /> <br />
-        <button type="submit">Save</button>
-      </form>
+        <input name="name" placeholder="Name" onChange={handleChange} /><br />
+        <input name="age" placeholder="Age" onChange={handleChange} /><br />
+        <input name="gender" placeholder="Gender" onChange={handleChange} /><br />
+        <input name="phone" placeholder="Phone" onChange={handleChange} /><br />
+        <input name="address" placeholder="Address" onChange={handleChange} /><br />
+        <input name="disease" placeholder="Disease" onChange={handleChange} /><br />
 
+        <button className="submit-button" type="submit">Save</button>
+      </form>
     </div>
   );
 }

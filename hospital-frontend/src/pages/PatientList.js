@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import API from "../services/Api";
 import { Link } from "react-router-dom";
+import API from "../services/Api";
 import "./PatientList.css";
 
 function PatientList() {
-  const [search, setSearch] = useState("");
-
   const [patients, setPatients] = useState([]);
+  const [search, setSearch] = useState(""); // ⭐ NEW STATE
 
   useEffect(() => {
     loadPatients();
@@ -33,16 +32,15 @@ function PatientList() {
       <Link to="/patients/add">
         <button className="add-button">Add Patient</button>
       </Link>
-  
-  {/* search box */}
-      <input
-  type="text"
-  className="search-input"
-  placeholder="Search by name or disease..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-/>
 
+      {/* ⭐ SEARCH BAR */}
+      <input
+        type="text"
+        className="search-input"
+        placeholder="Search by name or disease..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
       <table>
         <thead>
@@ -52,39 +50,44 @@ function PatientList() {
             <th>Gender</th>
             <th>Phone</th>
             <th>Disease</th>
-            <th>Actions</th> {/* 👈 NEW */}
+            <th>Actions</th>
           </tr>
         </thead>
 
-
-        
         <tbody>
-          
-  {patients
-    .filter((p) => {
-      const query = search.toLowerCase();
+          {patients
+            .filter((p) => {
+              const q = search.toLowerCase();
 
-      return (
-        p.name.toLowerCase().includes(query) ||
-        p.disease.toLowerCase().includes(query)
-      );
-    })
-    .map((p) => (
-      <tr key={p.id}>
-        <td>{p.name}</td>
-        <td>{p.age}</td>
-        <td>{p.gender}</td>
-        <td>{p.phone}</td>
-        <td>{p.disease}</td>
-        <td>
-          {/* Edit + Delete buttons */}
-          
-        </td>
-      </tr>
-    ))}
-</tbody>
+              return (
+                p.name.toLowerCase().includes(q) ||
+                p.disease.toLowerCase().includes(q)
+              );
+            })
+            .map((p) => (
+              <tr key={p.id}>
+                <td>{p.name}</td>
+                <td>{p.age}</td>
+                <td>{p.gender}</td>
+                <td>{p.phone}</td>
+                <td>{p.disease}</td>
 
-       
+                <td>
+                  <Link to={`/patients/edit/${p.id}`}>
+                    <button className="edit-btn">Edit</button>
+                  </Link>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(p.id)}
+                    style={{ marginLeft: "8px" }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
       </table>
     </div>
   );

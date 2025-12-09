@@ -5,6 +5,8 @@ import "./AppointmentList.css";
 
 function AppointmentList() {
   const [appointments, setAppointments] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("");     // ⭐ NEW
+  const [dateFilter, setDateFilter] = useState("");         // ⭐ NEW
 
   useEffect(() => {
     loadAppointments();
@@ -33,6 +35,26 @@ function AppointmentList() {
         <button className="add-button">Add Appointment</button>
       </Link>
 
+      {/* ⭐ STATUS FILTER */}
+      <select
+        className="filter-select"
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+      >
+        <option value="">All Status</option>
+        <option value="SCHEDULED">Scheduled</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
+
+      {/* ⭐ DATE FILTER */}
+      <input
+        type="date"
+        className="date-filter"
+        value={dateFilter}
+        onChange={(e) => setDateFilter(e.target.value)}
+      />
+
       <table>
         <thead>
           <tr>
@@ -41,33 +63,45 @@ function AppointmentList() {
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
-            <th>Actions</th> {/* NEW */}
+            <th>Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          {appointments.map((a) => (
-            <tr key={a.id}>
-              <td>{a.patient?.name}</td>
-              <td>{a.doctor?.name}</td>
-              <td>{a.date}</td>
-              <td>{a.time}</td>
-              <td>{a.status}</td>
-              <td>
-                <Link to={`/appointments/edit/${a.id}`}>
-                  <button className="edit-btn">Edit</button>
-                </Link>
+          {appointments
+            // ⭐ APPLY FILTERS
+            .filter((a) => {
+              const matchStatus =
+                statusFilter === "" ? true : a.status === statusFilter;
 
-                <button
-                  onClick={() => handleDelete(a.id)}
-                  className="delete-btn"
-                  style={{ marginLeft: "8px" }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+              const matchDate =
+                dateFilter === "" ? true : a.date === dateFilter;
+
+              return matchStatus && matchDate;
+            })
+            .map((a) => (
+              <tr key={a.id}>
+                <td>{a.patient?.name}</td>
+                <td>{a.doctor?.name}</td>
+                <td>{a.date}</td>
+                <td>{a.time}</td>
+                <td>{a.status}</td>
+
+                <td>
+                  <Link to={`/appointments/edit/${a.id}`}>
+                    <button className="edit-btn">Edit</button>
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(a.id)}
+                    className="delete-btn"
+                    style={{ marginLeft: "8px" }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

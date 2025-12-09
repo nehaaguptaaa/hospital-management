@@ -62,4 +62,13 @@ td {
   border-radius: 6px;
   font-size: 14px;
 }
+.search-input {
+  width: 40%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
 

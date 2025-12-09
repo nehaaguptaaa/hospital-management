@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../services/Api";
-import "./AddPatient.css"; // reuse same styling
+import "./AddPatient.css";
 
 function EditPatient() {
   const { id } = useParams();
@@ -13,7 +13,7 @@ function EditPatient() {
     gender: "",
     phone: "",
     address: "",
-    disease: "",
+    disease: ""
   });
 
   useEffect(() => {
@@ -39,52 +39,14 @@ function EditPatient() {
       <h2 className="form-title">Edit Patient</h2>
 
       <form onSubmit={handleSubmit}>
-        <input
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-        />
-        <br />
-        <input
-          name="age"
-          placeholder="Age"
-          value={form.age}
-          onChange={handleChange}
-        />
-        <br />
-        <input
-          name="gender"
-          placeholder="Gender"
-          value={form.gender}
-          onChange={handleChange}
-        />
-        <br />
-        <input
-          name="phone"
-          placeholder="Phone"
-          value={form.phone}
-          onChange={handleChange}
-        />
-        <br />
-        <input
-          name="address"
-          placeholder="Address"
-          value={form.address}
-          onChange={handleChange}
-        />
-        <br />
-        <input
-          name="disease"
-          placeholder="Disease"
-          value={form.disease}
-          onChange={handleChange}
-        />
-        <br />
+        <input name="name" value={form.name} onChange={handleChange} /><br />
+        <input name="age" value={form.age} onChange={handleChange} /><br />
+        <input name="gender" value={form.gender} onChange={handleChange} /><br />
+        <input name="phone" value={form.phone} onChange={handleChange} /><br />
+        <input name="address" value={form.address} onChange={handleChange} /><br />
+        <input name="disease" value={form.disease} onChange={handleChange} /><br />
 
-        <button type="submit" className="submit-button">
-          Update
-        </button>
+        <button className="submit-button" type="submit">Update</button>
       </form>
     </div>
   );

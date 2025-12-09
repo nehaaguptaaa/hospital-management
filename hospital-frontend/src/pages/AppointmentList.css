@@ -66,3 +66,20 @@ td {
 .delete-btn:hover {
   background-color: #b71c1c;
 }
+.filter-select {
+  padding: 10px;
+  margin-right: 15px;
+  margin-top: 15px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  font-size: 14px;
+}
+
+.date-filter {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
