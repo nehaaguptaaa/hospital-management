@@ -29,3 +29,9 @@ form select {
 .submit-button:hover {
   background-color: #145a9e;
 }
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin: 4px 0 10px;
+}
+

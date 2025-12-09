@@ -42,3 +42,9 @@ form select:focus {
 .submit-button:hover {
   background-color: #145a9e;
 }
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin: 5px 0 10px;
+}
+

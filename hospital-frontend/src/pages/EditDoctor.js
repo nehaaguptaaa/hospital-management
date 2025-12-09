@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../services/Api";
-import "./AddDoctor.css";  // reuse styles
+import "./AddPatient.css"; // using same CSS styling
 
 function EditDoctor() {
   const { id } = useParams();
@@ -14,6 +14,8 @@ function EditDoctor() {
     qualification: "",
     experience: ""
   });
+
+  const [errors, setErrors] = useState({}); // ⭐ error state
 
   useEffect(() => {
     API.get(`/doctors/${id}`)
@@ -28,6 +30,36 @@ function EditDoctor() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    let newErrors = {};
+
+    // ⭐ Validations
+    if (!form.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!form.specialization.trim()) {
+      newErrors.specialization = "Specialization is required";
+    }
+
+    if (!/^\d{10}$/.test(form.phone)) {
+      newErrors.phone = "Phone number must be exactly 10 digits";
+    }
+
+    if (!form.qualification.trim()) {
+      newErrors.qualification = "Qualification is required";
+    }
+
+    const exp = Number(form.experience);
+    if (isNaN(exp) || exp < 0 || exp > 50) {
+      newErrors.experience = "Experience must be between 0 and 50 years";
+    }
+
+    setErrors(newErrors);
+
+    // stop if errors exist
+    if (Object.keys(newErrors).length > 0) return;
+
+    // ⭐ Update API call
     API.put(`/doctors/${id}`, form)
       .then(() => navigate("/doctors"))
       .catch((err) => console.log(err));
@@ -38,13 +70,14 @@ function EditDoctor() {
       <h2 className="form-title">Edit Doctor</h2>
 
       <form onSubmit={handleSubmit}>
+
         <input
           name="name"
           placeholder="Name"
           value={form.name}
           onChange={handleChange}
         />
-        <br />
+        {errors.name && <p className="error-text">{errors.name}</p>}
 
         <input
           name="specialization"
@@ -52,7 +85,9 @@ function EditDoctor() {
           value={form.specialization}
           onChange={handleChange}
         />
-        <br />
+        {errors.specialization && (
+          <p className="error-text">{errors.specialization}</p>
+        )}
 
         <input
           name="phone"
@@ -60,7 +95,7 @@ function EditDoctor() {
           value={form.phone}
           onChange={handleChange}
         />
-        <br />
+        {errors.phone && <p className="error-text">{errors.phone}</p>}
 
         <input
           name="qualification"
@@ -68,15 +103,19 @@ function EditDoctor() {
           value={form.qualification}
           onChange={handleChange}
         />
-        <br />
+        {errors.qualification && (
+          <p className="error-text">{errors.qualification}</p>
+        )}
 
         <input
           name="experience"
-          placeholder="Experience"
+          placeholder="Experience (Years)"
           value={form.experience}
           onChange={handleChange}
         />
-        <br />
+        {errors.experience && (
+          <p className="error-text">{errors.experience}</p>
+        )}
 
         <button className="submit-button" type="submit">
           Update
