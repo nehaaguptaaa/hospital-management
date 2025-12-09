@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../services/Api";
 import { useNavigate } from "react-router-dom";
-import "./AddAppointment.css"; // reuse same CSS
 
 function AddAppointment() {
   const [patients, setPatients] = useState([]);
@@ -15,11 +14,9 @@ function AddAppointment() {
     status: "SCHEDULED"
   });
 
-  const [errors, setErrors] = useState({}); // ⭐ error state
-
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  // Load doctors + patients
   useEffect(() => {
     API.get("/patients").then((res) => setPatients(res.data));
     API.get("/doctors").then((res) => setDoctors(res.data));
@@ -34,17 +31,10 @@ function AddAppointment() {
 
     let newErrors = {};
 
-    // ⭐ Patient required
-    if (!form.patientId) {
-      newErrors.patientId = "Please select a patient";
-    }
+    if (!form.patientId) newErrors.patientId = "Please select a patient";
+    if (!form.doctorId) newErrors.doctorId = "Please select a doctor";
 
-    // ⭐ Doctor required
-    if (!form.doctorId) {
-      newErrors.doctorId = "Please select a doctor";
-    }
-
-    // ⭐ Date validation (future only, next 10 days)
+    // date validation
     const today = new Date();
     const selectedDate = new Date(form.date);
 
@@ -52,86 +42,116 @@ function AddAppointment() {
     next10.setDate(today.getDate() + 10);
 
     if (!form.date) {
-      newErrors.date = "Please select a valid date";
+      newErrors.date = "Please select a date";
     } else if (selectedDate <= today) {
       newErrors.date = "Date must be in the future";
     } else if (selectedDate > next10) {
-      newErrors.date = "Appointments can only be booked for the next 10 days";
+      newErrors.date = "Appointment must be within the next 10 days";
     }
 
-    // ⭐ Time required
-    if (!form.time) {
-      newErrors.time = "Please select a valid time";
-    }
-
-    // ⭐ Status required
-    if (!form.status) {
-      newErrors.status = "Please select a status";
-    }
+    if (!form.time) newErrors.time = "Please select a time";
+    if (!form.status) newErrors.status = "Please select a status";
 
     setErrors(newErrors);
 
-    // Stop if errors exist
     if (Object.keys(newErrors).length > 0) return;
 
-    // ⭐ If valid → Submit
     API.post("/appointments", form)
       .then(() => navigate("/appointments"))
       .catch((err) => console.log(err));
   };
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">Add Appointment</h2>
+    <div className="container mt-4">
+      <div className="card shadow">
+        <div className="card-header bg-primary text-white">
+          <h4 className="mb-0">Add Appointment</h4>
+        </div>
 
-      <form onSubmit={handleSubmit}>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
 
-        {/* Patient dropdown */}
-        <select name="patientId" onChange={handleChange}>
-          <option value="">Select Patient</option>
-          {patients.map((p) => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
-        </select>
-        {errors.patientId && <p className="error-text">{errors.patientId}</p>}
+            {/* Patient */}
+            <div className="mb-3">
+              <label className="form-label">Patient</label>
+              <select
+                name="patientId"
+                className="form-select"
+                onChange={handleChange}
+              >
+                <option value="">Select Patient</option>
+                {patients.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+              {errors.patientId && <div className="text-danger">{errors.patientId}</div>}
+            </div>
 
-        {/* Doctor dropdown */}
-        <select name="doctorId" onChange={handleChange}>
-          <option value="">Select Doctor</option>
-          {doctors.map((d) => (
-            <option key={d.id} value={d.id}>{d.name} - {d.specialization}</option>
-          ))}
-        </select>
-        {errors.doctorId && <p className="error-text">{errors.doctorId}</p>}
+            {/* Doctor */}
+            <div className="mb-3">
+              <label className="form-label">Doctor</label>
+              <select
+                name="doctorId"
+                className="form-select"
+                onChange={handleChange}
+              >
+                <option value="">Select Doctor</option>
+                {doctors.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name} - {d.specialization}
+                  </option>
+                ))}
+              </select>
+              {errors.doctorId && <div className="text-danger">{errors.doctorId}</div>}
+            </div>
 
-        {/* Date */}
-        <input
-          name="date"
-          type="date"
-          onChange={handleChange}
-        />
-        {errors.date && <p className="error-text">{errors.date}</p>}
+            {/* Date */}
+            <div className="mb-3">
+              <label className="form-label">Date</label>
+              <input
+                type="date"
+                name="date"
+                className="form-control"
+                onChange={handleChange}
+              />
+              {errors.date && <div className="text-danger">{errors.date}</div>}
+            </div>
 
-        {/* Time */}
-        <input
-          name="time"
-          type="time"
-          onChange={handleChange}
-        />
-        {errors.time && <p className="error-text">{errors.time}</p>}
+            {/* Time */}
+            <div className="mb-3">
+              <label className="form-label">Time</label>
+              <input
+                type="time"
+                name="time"
+                className="form-control"
+                onChange={handleChange}
+              />
+              {errors.time && <div className="text-danger">{errors.time}</div>}
+            </div>
 
-        {/* Status */}
-        <select name="status" onChange={handleChange} value={form.status}>
-          <option value="SCHEDULED">Scheduled</option>
-          <option value="COMPLETED">Completed</option>
-          <option value="CANCELLED">Cancelled</option>
-        </select>
-        {errors.status && <p className="error-text">{errors.status}</p>}
+            {/* Status */}
+            <div className="mb-3">
+              <label className="form-label">Status</label>
+              <select
+                name="status"
+                className="form-select"
+                value={form.status}
+                onChange={handleChange}
+              >
+                <option value="SCHEDULED">Scheduled</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+              {errors.status && <div className="text-danger">{errors.status}</div>}
+            </div>
 
-        <button className="submit-button" type="submit">
-          Save
-        </button>
-      </form>
+            <button className="btn btn-success w-100" type="submit">
+              Save Appointment
+            </button>
+
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

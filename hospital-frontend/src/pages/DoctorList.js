@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import API from "../services/Api";
 import { Link } from "react-router-dom";
-import "./DoctorList.css";
 
 function DoctorList() {
   const [doctors, setDoctors] = useState([]);
-  const [specialization, setSpecialization] = useState(""); // ⭐ NEW
+  const [specialization, setSpecialization] = useState("");
 
   useEffect(() => {
     loadDoctors();
@@ -25,35 +24,38 @@ function DoctorList() {
       .catch((err) => console.log(err));
   };
 
-  // ⭐ Extract all unique specializations from doctors
-  const uniqueSpecializations = [
-    "All",
-    ...new Set(doctors.map((d) => d.specialization)),
-  ];
+  const uniqueSpecializations = ["All", ...new Set(doctors.map((d) => d.specialization))];
 
   return (
-    <div className="table-container">
-      <h2 className="table-title">Doctor List</h2>
+    <div className="container mt-4">
 
-      <Link to="/doctors/add">
-        <button className="add-button">Add Doctor</button>
-      </Link>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h3>Doctor List</h3>
+        <Link to="/doctors/add" className="btn btn-success">
+          Add Doctor
+        </Link>
+      </div>
 
-      {/* ⭐ SPECIALIZATION FILTER */}
-      <select
-        className="filter-select"
-        value={specialization}
-        onChange={(e) => setSpecialization(e.target.value)}
-      >
-        {uniqueSpecializations.map((spec, index) => (
-          <option key={index} value={spec === "All" ? "" : spec}>
-            {spec}
-          </option>
-        ))}
-      </select>
+      {/* FILTER */}
+      <div className="mb-3">
+        <select
+          className="form-select"
+          value={specialization}
+          onChange={(e) => setSpecialization(e.target.value)}
+        >
+          {uniqueSpecializations.map((spec, index) => (
+            <option 
+              key={index} 
+              value={spec === "All" ? "" : spec}
+            >
+              {spec}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <table>
-        <thead>
+      <table className="table table-striped table-hover shadow">
+        <thead className="table-primary">
           <tr>
             <th>Name</th>
             <th>Specialization</th>
@@ -67,9 +69,7 @@ function DoctorList() {
         <tbody>
           {doctors
             .filter((d) =>
-              specialization === ""
-                ? true
-                : d.specialization === specialization
+              specialization === "" ? true : d.specialization === specialization
             )
             .map((d) => (
               <tr key={d.id}>
@@ -78,15 +78,18 @@ function DoctorList() {
                 <td>{d.phone}</td>
                 <td>{d.qualification}</td>
                 <td>{d.experience}</td>
+
                 <td>
-                  <Link to={`/doctors/edit/${d.id}`}>
-                    <button className="edit-btn">Edit</button>
+                  <Link 
+                    to={`/doctors/edit/${d.id}`} 
+                    className="btn btn-warning btn-sm me-2"
+                  >
+                    Edit
                   </Link>
 
                   <button
-                    className="delete-btn"
                     onClick={() => handleDelete(d.id)}
-                    style={{ marginLeft: "8px" }}
+                    className="btn btn-danger btn-sm"
                   >
                     Delete
                   </button>

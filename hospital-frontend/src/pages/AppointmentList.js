@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import API from "../services/Api";
 import { Link } from "react-router-dom";
-import "./AppointmentList.css";
 
 function AppointmentList() {
   const [appointments, setAppointments] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("");     // ⭐ NEW
-  const [dateFilter, setDateFilter] = useState("");         // ⭐ NEW
+  const [statusFilter, setStatusFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
 
   useEffect(() => {
     loadAppointments();
@@ -19,8 +18,7 @@ function AppointmentList() {
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm("Are you sure you want to delete this appointment?"))
-      return;
+    if (!window.confirm("Are you sure?")) return;
 
     API.delete(`/appointments/${id}`)
       .then(() => loadAppointments())
@@ -28,35 +26,39 @@ function AppointmentList() {
   };
 
   return (
-    <div className="table-container">
-      <h2 className="table-title">Appointment List</h2>
+    <div className="container mt-4">
 
-      <Link to="/appointments/add">
-        <button className="add-button">Add Appointment</button>
-      </Link>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h3>Appointment List</h3>
 
-      {/* ⭐ STATUS FILTER */}
-      <select
-        className="filter-select"
-        value={statusFilter}
-        onChange={(e) => setStatusFilter(e.target.value)}
-      >
-        <option value="">All Status</option>
-        <option value="SCHEDULED">Scheduled</option>
-        <option value="COMPLETED">Completed</option>
-        <option value="CANCELLED">Cancelled</option>
-      </select>
+        <Link to="/appointments/add" className="btn btn-success">
+          Add Appointment
+        </Link>
+      </div>
 
-      {/* ⭐ DATE FILTER */}
-      <input
-        type="date"
-        className="date-filter"
-        value={dateFilter}
-        onChange={(e) => setDateFilter(e.target.value)}
-      />
+      {/* Filters */}
+      <div className="d-flex gap-2 mb-3">
+        <select
+          className="form-select"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">All Status</option>
+          <option value="SCHEDULED">Scheduled</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
 
-      <table>
-        <thead>
+        <input
+          type="date"
+          className="form-control"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+        />
+      </div>
+
+      <table className="table table-striped table-hover shadow">
+        <thead className="table-info">
           <tr>
             <th>Patient</th>
             <th>Doctor</th>
@@ -69,16 +71,10 @@ function AppointmentList() {
 
         <tbody>
           {appointments
-            // ⭐ APPLY FILTERS
-            .filter((a) => {
-              const matchStatus =
-                statusFilter === "" ? true : a.status === statusFilter;
-
-              const matchDate =
-                dateFilter === "" ? true : a.date === dateFilter;
-
-              return matchStatus && matchDate;
-            })
+            .filter((a) =>
+              (statusFilter ? a.status === statusFilter : true) &&
+              (dateFilter ? a.date === dateFilter : true)
+            )
             .map((a) => (
               <tr key={a.id}>
                 <td>{a.patient?.name}</td>
@@ -88,14 +84,16 @@ function AppointmentList() {
                 <td>{a.status}</td>
 
                 <td>
-                  <Link to={`/appointments/edit/${a.id}`}>
-                    <button className="edit-btn">Edit</button>
+                  <Link
+                    to={`/appointments/edit/${a.id}`}
+                    className="btn btn-warning btn-sm me-2"
+                  >
+                    Edit
                   </Link>
 
                   <button
                     onClick={() => handleDelete(a.id)}
-                    className="delete-btn"
-                    style={{ marginLeft: "8px" }}
+                    className="btn btn-danger btn-sm"
                   >
                     Delete
                   </button>
@@ -104,6 +102,7 @@ function AppointmentList() {
             ))}
         </tbody>
       </table>
+
     </div>
   );
 }

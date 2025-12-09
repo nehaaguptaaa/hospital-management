@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../services/Api";
-import "./AddPatient.css"; // using same CSS styling
 
 function EditDoctor() {
   const { id } = useParams();
@@ -15,7 +14,7 @@ function EditDoctor() {
     experience: ""
   });
 
-  const [errors, setErrors] = useState({}); // ⭐ error state
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     API.get(`/doctors/${id}`)
@@ -32,95 +31,95 @@ function EditDoctor() {
 
     let newErrors = {};
 
-    // ⭐ Validations
-    if (!form.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!form.specialization.trim()) {
-      newErrors.specialization = "Specialization is required";
-    }
-
-    if (!/^\d{10}$/.test(form.phone)) {
-      newErrors.phone = "Phone number must be exactly 10 digits";
-    }
-
-    if (!form.qualification.trim()) {
-      newErrors.qualification = "Qualification is required";
-    }
+    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (!form.specialization.trim()) newErrors.specialization = "Specialization is required";
+    if (!/^\d{10}$/.test(form.phone)) newErrors.phone = "Phone must be 10 digits";
+    if (!form.qualification.trim()) newErrors.qualification = "Qualification is required";
 
     const exp = Number(form.experience);
-    if (isNaN(exp) || exp < 0 || exp > 50) {
+    if (isNaN(exp) || exp < 0 || exp > 50)
       newErrors.experience = "Experience must be between 0 and 50 years";
-    }
 
     setErrors(newErrors);
-
-    // stop if errors exist
     if (Object.keys(newErrors).length > 0) return;
 
-    // ⭐ Update API call
     API.put(`/doctors/${id}`, form)
       .then(() => navigate("/doctors"))
       .catch((err) => console.log(err));
   };
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">Edit Doctor</h2>
+    <div className="container mt-4">
+      <div className="card shadow">
+        <div className="card-header bg-warning">
+          <h4 className="mb-0 text-dark">Edit Doctor</h4>
+        </div>
 
-      <form onSubmit={handleSubmit}>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
 
-        <input
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-        />
-        {errors.name && <p className="error-text">{errors.name}</p>}
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <input
+                name="name"
+                className="form-control"
+                value={form.name}
+                onChange={handleChange}
+              />
+              {errors.name && <div className="text-danger">{errors.name}</div>}
+            </div>
 
-        <input
-          name="specialization"
-          placeholder="Specialization"
-          value={form.specialization}
-          onChange={handleChange}
-        />
-        {errors.specialization && (
-          <p className="error-text">{errors.specialization}</p>
-        )}
+            <div className="mb-3">
+              <label className="form-label">Specialization</label>
+              <input
+                name="specialization"
+                className="form-control"
+                value={form.specialization}
+                onChange={handleChange}
+              />
+              {errors.specialization && <div className="text-danger">{errors.specialization}</div>}
+            </div>
 
-        <input
-          name="phone"
-          placeholder="Phone"
-          value={form.phone}
-          onChange={handleChange}
-        />
-        {errors.phone && <p className="error-text">{errors.phone}</p>}
+            <div className="mb-3">
+              <label className="form-label">Phone</label>
+              <input
+                name="phone"
+                className="form-control"
+                value={form.phone}
+                onChange={handleChange}
+              />
+              {errors.phone && <div className="text-danger">{errors.phone}</div>}
+            </div>
 
-        <input
-          name="qualification"
-          placeholder="Qualification"
-          value={form.qualification}
-          onChange={handleChange}
-        />
-        {errors.qualification && (
-          <p className="error-text">{errors.qualification}</p>
-        )}
+            <div className="mb-3">
+              <label className="form-label">Qualification</label>
+              <input
+                name="qualification"
+                className="form-control"
+                value={form.qualification}
+                onChange={handleChange}
+              />
+              {errors.qualification && <div className="text-danger">{errors.qualification}</div>}
+            </div>
 
-        <input
-          name="experience"
-          placeholder="Experience (Years)"
-          value={form.experience}
-          onChange={handleChange}
-        />
-        {errors.experience && (
-          <p className="error-text">{errors.experience}</p>
-        )}
+            <div className="mb-3">
+              <label className="form-label">Experience (Years)</label>
+              <input
+                name="experience"
+                className="form-control"
+                value={form.experience}
+                onChange={handleChange}
+              />
+              {errors.experience && <div className="text-danger">{errors.experience}</div>}
+            </div>
 
-        <button className="submit-button" type="submit">
-          Update
-        </button>
-      </form>
+            <button className="btn btn-primary w-100" type="submit">
+              Update Doctor
+            </button>
+
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

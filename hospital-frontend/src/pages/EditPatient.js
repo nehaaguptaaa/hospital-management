@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../services/Api";
-import "./AddPatient.css";
 
 function EditPatient() {
   const { id } = useParams();
@@ -16,7 +15,7 @@ function EditPatient() {
     disease: ""
   });
 
-  const [errors, setErrors] = useState({}); // ⭐ error state
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     API.get(`/patients/${id}`)
@@ -33,88 +32,79 @@ function EditPatient() {
 
     let newErrors = {};
 
-    // ⭐ Validations
-    if (!form.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (form.age < 0 || form.age > 120) {
+    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (form.age < 0 || form.age > 120)
       newErrors.age = "Age must be between 0 and 120";
-    }
-
-    if (!/^\d{10}$/.test(form.phone)) {
-      newErrors.phone = "Phone number must be exactly 10 digits";
-    }
-
-    if (!form.disease.trim()) {
+    if (!/^\d{10}$/.test(form.phone))
+      newErrors.phone = "Phone number must be 10 digits";
+    if (!form.disease.trim())
       newErrors.disease = "Disease is required";
-    }
 
     setErrors(newErrors);
-
-    // Stop submission if errors exist
     if (Object.keys(newErrors).length > 0) return;
 
-    // ⭐ Update patient
     API.put(`/patients/${id}`, form)
       .then(() => navigate("/patients"))
       .catch((err) => console.log(err));
   };
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">Edit Patient</h2>
+    <div className="container mt-4">
+      <div className="card shadow">
+        <div className="card-header bg-warning">
+          <h4 className="mb-0">Edit Patient</h4>
+        </div>
 
-      <form onSubmit={handleSubmit}>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
 
-        <input
-          name="name"
-          value={form.name}
-          placeholder="Name"
-          onChange={handleChange}
-        />
-        {errors.name && <p className="error-text">{errors.name}</p>}
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <input name="name" className="form-control"
+                value={form.name} onChange={handleChange} />
+              {errors.name && <div className="text-danger">{errors.name}</div>}
+            </div>
 
-        <input
-          name="age"
-          value={form.age}
-          placeholder="Age"
-          onChange={handleChange}
-        />
-        {errors.age && <p className="error-text">{errors.age}</p>}
+            <div className="mb-3">
+              <label className="form-label">Age</label>
+              <input name="age" className="form-control"
+                value={form.age} onChange={handleChange} />
+              {errors.age && <div className="text-danger">{errors.age}</div>}
+            </div>
 
-        <input
-          name="gender"
-          value={form.gender}
-          placeholder="Gender"
-          onChange={handleChange}
-        />
+            <div className="mb-3">
+              <label className="form-label">Gender</label>
+              <input name="gender" className="form-control"
+                value={form.gender} onChange={handleChange} />
+            </div>
 
-        <input
-          name="phone"
-          value={form.phone}
-          placeholder="Phone"
-          onChange={handleChange}
-        />
-        {errors.phone && <p className="error-text">{errors.phone}</p>}
+            <div className="mb-3">
+              <label className="form-label">Phone</label>
+              <input name="phone" className="form-control"
+                value={form.phone} onChange={handleChange} />
+              {errors.phone && <div className="text-danger">{errors.phone}</div>}
+            </div>
 
-        <input
-          name="address"
-          value={form.address}
-          placeholder="Address"
-          onChange={handleChange}
-        />
+            <div className="mb-3">
+              <label className="form-label">Address</label>
+              <input name="address" className="form-control"
+                value={form.address} onChange={handleChange} />
+            </div>
 
-        <input
-          name="disease"
-          value={form.disease}
-          placeholder="Disease"
-          onChange={handleChange}
-        />
-        {errors.disease && <p className="error-text">{errors.disease}</p>}
+            <div className="mb-3">
+              <label className="form-label">Disease</label>
+              <input name="disease" className="form-control"
+                value={form.disease} onChange={handleChange} />
+              {errors.disease && <div className="text-danger">{errors.disease}</div>}
+            </div>
 
-        <button className="submit-button" type="submit">Update</button>
-      </form>
+            <button className="btn btn-primary w-100" type="submit">
+              Update Patient
+            </button>
+
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

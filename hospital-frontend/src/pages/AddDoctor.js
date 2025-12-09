@@ -1,7 +1,6 @@
 import { useState } from "react";
 import API from "../services/Api";
 import { useNavigate } from "react-router-dom";
-import "./AddPatient.css"; // reuse same CSS styling
 
 function AddDoctor() {
   const [form, setForm] = useState({
@@ -12,8 +11,7 @@ function AddDoctor() {
     experience: ""
   });
 
-  const [errors, setErrors] = useState({}); // ⭐ error state
-
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,89 +23,70 @@ function AddDoctor() {
 
     let newErrors = {};
 
-    // ⭐ VALIDATIONS
-
-    if (!form.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!form.specialization.trim()) {
-      newErrors.specialization = "Specialization is required";
-    }
-
-    if (!/^\d{10}$/.test(form.phone)) {
-      newErrors.phone = "Phone number must be exactly 10 digits";
-    }
-
-    if (!form.qualification.trim()) {
-      newErrors.qualification = "Qualification is required";
-    }
+    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (!form.specialization.trim()) newErrors.specialization = "Specialization is required";
+    if (!/^\d{10}$/.test(form.phone)) newErrors.phone = "Phone must be 10 digits";
+    if (!form.qualification.trim()) newErrors.qualification = "Qualification is required";
 
     const exp = Number(form.experience);
-    if (isNaN(exp) || exp < 0 || exp > 50) {
+    if (isNaN(exp) || exp < 0 || exp > 50)
       newErrors.experience = "Experience must be between 0 and 50 years";
-    }
 
     setErrors(newErrors);
-
-    // Stop submission if there are errors
     if (Object.keys(newErrors).length > 0) return;
 
-    // ⭐ If everything is valid → submit data
     API.post("/doctors", form)
       .then(() => navigate("/doctors"))
       .catch((err) => console.log(err));
   };
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">Add Doctor</h2>
+    <div className="container mt-4">
+      <div className="card shadow">
+        <div className="card-header bg-primary text-white">
+          <h4 className="mb-0">Add Doctor</h4>
+        </div>
 
-      <form onSubmit={handleSubmit}>
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
 
-        <input
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-        />
-        {errors.name && <p className="error-text">{errors.name}</p>}
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <input name="name" className="form-control" onChange={handleChange} />
+              {errors.name && <div className="text-danger">{errors.name}</div>}
+            </div>
 
-        <input
-          name="specialization"
-          placeholder="Specialization"
-          onChange={handleChange}
-        />
-        {errors.specialization && (
-          <p className="error-text">{errors.specialization}</p>
-        )}
+            <div className="mb-3">
+              <label className="form-label">Specialization</label>
+              <input name="specialization" className="form-control" onChange={handleChange} />
+              {errors.specialization && <div className="text-danger">{errors.specialization}</div>}
+            </div>
 
-        <input
-          name="phone"
-          placeholder="Phone"
-          onChange={handleChange}
-        />
-        {errors.phone && <p className="error-text">{errors.phone}</p>}
+            <div className="mb-3">
+              <label className="form-label">Phone</label>
+              <input name="phone" className="form-control" onChange={handleChange} />
+              {errors.phone && <div className="text-danger">{errors.phone}</div>}
+            </div>
 
-        <input
-          name="qualification"
-          placeholder="Qualification"
-          onChange={handleChange}
-        />
-        {errors.qualification && (
-          <p className="error-text">{errors.qualification}</p>
-        )}
+            <div className="mb-3">
+              <label className="form-label">Qualification</label>
+              <input name="qualification" className="form-control" onChange={handleChange} />
+              {errors.qualification && <div className="text-danger">{errors.qualification}</div>}
+            </div>
 
-        <input
-          name="experience"
-          placeholder="Experience (Years)"
-          onChange={handleChange}
-        />
-        {errors.experience && (
-          <p className="error-text">{errors.experience}</p>
-        )}
+            <div className="mb-3">
+              <label className="form-label">Experience (Years)</label>
+              <input name="experience" className="form-control" onChange={handleChange} />
+              {errors.experience && <div className="text-danger">{errors.experience}</div>}
+            </div>
 
-        <button className="submit-button" type="submit">Save</button>
-      </form>
+            <button className="btn btn-success w-100" type="submit">
+              Save Doctor
+            </button>
+
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
